@@ -23,6 +23,18 @@ def emotion_detector(text_to_analyze):
     #Identify the dominant emotion
     emotion['dominant_emotion'] = max(emotion, key=emotion.get)
 
-    return emotion
+    if response.status_code == 200:
+        return emotion
 
+    elif response.status_code == 400:    
+        return{
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
 
+    else:
+        raise Exception(f"Unexpected status code: {response.status_code}")
