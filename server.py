@@ -6,10 +6,16 @@ app = Flask("Emotion Detector")
 @app.route("/emotionDetector", methods=['GET', 'POST'])
 def emotion_detect():
     # Retrieve the text to analyze from the request arguments
-    text_to_analyze = request.form.get('textToAnalyze')
-
+    text_to_analyze = (
+        request.form.get('textToAnalyze')
+        or request.args.get('textToAnalyze')
+    )
     # Pass the text to the sentiment_analyzer function and store the response
     response = emotion_detector(text_to_analyze)
+
+    # ----- Check for error condition
+    if response['dominant_emotion'] is None:
+        return "Invalid text! Please try again."
 
     # Extract the emotion and score from the response
     anger = response['anger']
